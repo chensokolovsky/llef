@@ -310,10 +310,10 @@ class ContextHandler:
         half_width = int(width * 0.5)
         total_registers = len(registers_lines)
         total_lines = int(total_registers * 0.5)
-        for i in range(total_lines-1):    # odd number in arm64
+        for i in range(total_lines):    # odd number in arm64
             
-            left = registers_lines[i*2]
-            right = registers_lines[i*2+1]
+            left = registers_lines[i]
+            right = registers_lines[i+total_lines]
             clean_left  = re.sub(r'\x1b\[[0-9;]*m', '', left)
             
             diff = half_width - len(clean_left)
@@ -323,7 +323,7 @@ class ContextHandler:
             output_line(full_line)
 
         # odd number in arm64, so just print pc as the last one     
-        output_line(registers_lines[-1])
+        #output_line(registers_lines[-1])
 
         for flag_register in self.arch.flag_registers:
             if self.frame.register[flag_register.name] is not None:

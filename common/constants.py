@@ -6,7 +6,7 @@ from enum import Enum
 class TERM_COLORS(Enum):
     """Used to colorify terminal output."""
 
-    BLUE = "\033[34m"
+    BLUE = "\033[38;5;81m" #"\033[34m"
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
     RED = "\033[1;31m"   #"\033[31m"
