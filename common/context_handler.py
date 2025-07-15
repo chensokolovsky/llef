@@ -1,7 +1,9 @@
 import os
+import re
 
 from typing import Dict, Type, Optional
 from string import printable
+import shutil
 
 from lldb import (
     SBAddress,
@@ -203,7 +205,7 @@ class ContextHandler:
 
             output_line(line)
 
-    def print_register(self, register: SBValue) -> None:
+    def print_register(self, register: SBValue) -> str:
         """Print details of a @register"""
         reg_name = register.GetName()
         reg_value = register.GetValueAsUnsigned()
@@ -231,7 +233,7 @@ class ContextHandler:
 
         line += self.generate_printable_line_from_pointer(reg_value)
 
-        output_line(line)
+        return line
 
     def print_flags_register(self, flag_register: FlagRegister) -> None:
         """Format and print the contents of the flag register."""
@@ -298,9 +300,31 @@ class ContextHandler:
         else:
             register_list = self.arch().gpr_registers
 
+        registers_lines = []
         for reg in register_list:
             if self.frame.register[reg] is not None:
-                self.print_register(self.frame.register[reg])
+                line = self.print_register(self.frame.register[reg])
+                registers_lines.append(line)
+
+        width = shutil.get_terminal_size().columns
+        half_width = int(width * 0.5)
+        total_registers = len(registers_lines)
+        total_lines = int(total_registers * 0.5)
+        for i in range(total_lines-1):    # odd number in arm64
+            
+            left = registers_lines[i*2]
+            right = registers_lines[i*2+1]
+            clean_left  = re.sub(r'\x1b\[[0-9;]*m', '', left)
+            
+            diff = half_width - len(clean_left)
+            if diff > 0:
+                left += ' ' * diff
+            full_line = left + right
+            output_line(full_line)
+
+        # odd number in arm64, so just print pc as the last one     
+        output_line(registers_lines[-1])
+
         for flag_register in self.arch.flag_registers:
             if self.frame.register[flag_register.name] is not None:
                 self.print_flags_register(flag_register)
@@ -390,7 +414,11 @@ class ContextHandler:
             string_color=TERM_COLORS[self.color_settings.section_header_color]
         )
 
-        for i in range(self.thread.GetNumFrames()):
+        total_frames = self.thread.GetNumFrames()
+        max_frames = 5 ## ideally read from config
+        frames_to_display = min(max_frames, total_frames)
+
+        for i in range(frames_to_display):
             if i == 0:
                 number_color = TERM_COLORS[self.color_settings.highlighted_index_color]
             else:
