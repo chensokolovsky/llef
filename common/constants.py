@@ -9,10 +9,10 @@ class TERM_COLORS(Enum):
     BLUE = "\033[34m"
     GREEN = "\033[32m"
     YELLOW = "\033[33m"
-    RED = "\033[31m"
+    RED = "\033[1;31m"   #"\033[31m"
     PINK = "\033[35m"
     CYAN = "\033[36m"
-    GREY = "\033[1;38;5;240m"
+    GREY = "\033[38;5;226m"  #"\033[1;38;5;240m"
     ENDC = "\033[0m"
 
 
