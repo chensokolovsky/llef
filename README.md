@@ -1,3 +1,14 @@
+## My fork changes. 
+I improved the layout to better fit my needs to look like this:
+<p align="center">
+  <img src="assets/new_llef.png" alt="llef new"/>
+</p>
+
+Changes are not on the main branch, see the ui_layout branch.   
+From this point on this is the original README.  
+
+---
+
 <p align="center">
   <img src="assets/llef-dragon-small.png" alt="llef logo"/>
 </p>
