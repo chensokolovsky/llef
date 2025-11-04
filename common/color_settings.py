@@ -109,7 +109,7 @@ class LLEFColorSettings(BaseLLEFSettings, metaclass=Singleton):
 
         if setting:
             if setting not in settings_names:
-                output_line(f"Invalid LLEF setting {setting}")
+                output_line(f"Invalid LLEF setting {setting} error 1002")
                 return False
             settings_names = [setting]
 

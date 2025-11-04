@@ -9,6 +9,8 @@ from lldb import SBError, SBFrame, SBMemoryRegionInfo, SBMemoryRegionInfoList, S
 from common.constants import ALIGN, GLYPHS, MSG_TYPE, TERM_COLORS
 from common.state import LLEFState
 
+import handlers.port_sender as port_sender
+
 
 def change_use_color(new_value: bool) -> None:
     """
@@ -17,7 +19,7 @@ def change_use_color(new_value: bool) -> None:
     LLEFState.use_color = new_value
 
 
-def output_line(line: Any) -> None:
+def output_line(line: Any, should_send=False) -> None:
     """
     Format a line of output for printing. Print should not be used elsewhere.
     Exception - clear_page would not function without terminal characters
@@ -26,7 +28,14 @@ def output_line(line: Any) -> None:
     ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     if LLEFState.use_color is False:
         line = ansi_escape.sub('', line)
-    print(line)
+
+
+    ### should we print this or send it to a local port?
+    if should_send:
+        port_sender.init_if_needed()
+        port_sender.send(line)
+    else:
+        print(line)
 
 
 def clear_page() -> None:
@@ -47,9 +56,12 @@ def print_line_with_string(
     line_color: TERM_COLORS = TERM_COLORS.GREY,
     string_color: TERM_COLORS = TERM_COLORS.BLUE,
     align: ALIGN = ALIGN.RIGHT,
+    should_send=False
 ) -> None:
     """Print a line with the provided @string padded with @char"""
     width = shutil.get_terminal_size().columns
+    if width < 50:
+        width = 200
     if align == ALIGN.RIGHT:
         l_pad = (width - len(string) - 6) * char.value
         r_pad = 4 * char.value
@@ -64,16 +76,18 @@ def print_line_with_string(
 
     output_line(
         f"{line_color.value}{l_pad}{TERM_COLORS.ENDC.value} "
-        + f"{string_color.value}{string}{TERM_COLORS.ENDC.value} {line_color.value}{r_pad}{TERM_COLORS.ENDC.value}"
+        + f"{string_color.value}{string}{TERM_COLORS.ENDC.value} {line_color.value}{r_pad}{TERM_COLORS.ENDC.value}", should_send=should_send
     )
 
 
 def print_line(
-    char: GLYPHS = GLYPHS.HORIZONTAL_LINE, color: TERM_COLORS = TERM_COLORS.GREY
+    char: GLYPHS = GLYPHS.HORIZONTAL_LINE, color: TERM_COLORS = TERM_COLORS.GREY,
+    should_send=False
 ) -> None:
     """Print a line of @char"""
     output_line(
-        f"{color.value}{shutil.get_terminal_size().columns*char.value}{TERM_COLORS.ENDC.value}"
+        f"{color.value}{shutil.get_terminal_size().columns*char.value}{TERM_COLORS.ENDC.value}",
+        should_send=should_send
     )
 
 
@@ -91,11 +105,11 @@ def print_message(msg_type: MSG_TYPE, message: str) -> None:
         output_line(f"{error_color.value}[+]{TERM_COLORS.ENDC.value} {message}")
 
 
-def print_instruction(line: str, color: TERM_COLORS = TERM_COLORS.ENDC) -> None:
+def print_instruction(line: str, color: TERM_COLORS = TERM_COLORS.ENDC, should_send=False) -> None:
     """Format and print a line of disassembly returned from LLDB (SBFrame.disassembly)"""
     loc_0x = line.find("0x")
     start_idx = loc_0x if loc_0x >= 0 else 0
-    output_line(f"{color.value}{line[start_idx:]}{TERM_COLORS.ENDC.value}")
+    output_line(f"{color.value}{line[start_idx:]}{TERM_COLORS.ENDC.value}", should_send)
 
 
 def get_registers(frame: SBFrame, frame_type: str) -> List[SBValue]:

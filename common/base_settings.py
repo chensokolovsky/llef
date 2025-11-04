@@ -79,7 +79,7 @@ class BaseLLEFSettings(metaclass=Singleton):
         Set a LLEF setting
         """
         if not hasattr(self, setting):
-            output_line(f"Invalid LLEF setting {setting}")
+            output_line(f"Invalid LLEF setting {setting} error 1001")
 
         restore_value = getattr(self, setting)
         self._RAW_CONFIG.set(self.GLOBAL_SECTION, setting, value)

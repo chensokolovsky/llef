@@ -69,6 +69,12 @@ class LLEFSettings(BaseLLEFSettings, metaclass=Singleton):
     @property
     def show_all_registers(self):
         return self._RAW_CONFIG.getboolean(self.GLOBAL_SECTION, "show_all_registers", fallback=False)
+    
+
+    @property
+    def send_to_local_port(self):
+        return self._RAW_CONFIG.getboolean(self.GLOBAL_SECTION, "send_to_local_port", fallback=False)
+    
 
     def validate_settings(self, setting=None) -> bool:
         """
@@ -78,7 +84,7 @@ class LLEFSettings(BaseLLEFSettings, metaclass=Singleton):
 
         if setting:
             if setting not in settings_names:
-                output_line(f"Invalid LLEF setting {setting}")
+                output_line(f"Invalid LLEF setting {setting} error 1003")
                 return False
             settings_names = [setting]
 

@@ -1,2 +1,5 @@
-command script import llef.py
+command script import /Users/chenshalev/workspace/iosMain/llef/llef.py
 settings set stop-disassembly-display never
+settings set use-color True
+llefsettings set color_output True
+llefsettings set send_to_local_port True

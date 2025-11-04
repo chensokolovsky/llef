@@ -1,3 +1,21 @@
+
+### Chen's edits:
+This branch can send all the output to a local port (9999)
+Listen in a terminal window
+```
+nc -lk localhost 9999
+```
+and load from the local lldbinit in this path, or add to your existing lldbinit the following lines:
+```
+command script import /Users/chenshalev/workspace/iosMain/llef/llef.py
+settings set stop-disassembly-display never
+settings set use-color True
+llefsettings set color_output True
+llefsettings set send_to_local_port True
+```
+Note that if not running via xcode you can probably skip the color-related lines
+
+
 <p align="center">
   <img src="assets/llef-dragon-small.png" alt="llef logo"/>
 </p>
