@@ -4,7 +4,8 @@ I improved the layout to better fit my needs to look like this:
   <img src="assets/new_llef.png" alt="llef new"/>
 </p>
 
-Changes are not on the main branch, see the ui_layout branch.   
+Changes are not on the main branch, see the ui_layout branch.
+Also checkout external_stream branch (and the readme) if you want to stream the output via a socket 
 From this point on this is the original README.  
 
 ---
