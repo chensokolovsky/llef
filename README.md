@@ -1,19 +1,22 @@
 
 ### Chen's edits:
-This branch can send all the output to a local port (9999)
-Listen in a terminal window
+This branch can send all the output to a local port.
+Set the host and port in handlers/port_sender.py
+On a local machine use something like localhost 9999
+Then listen in a terminal window
 ```
 nc -lk localhost 9999
 ```
-and load from the local lldbinit in this path, or add to your existing lldbinit the following lines:
+and load from this repo's .lldbinit in this path, or add to your existing lldbinit the following lines:
 ```
-command script import /Users/chenshalev/workspace/iosMain/llef/llef.py
-settings set stop-disassembly-display never
-settings set use-color True
-llefsettings set color_output True
-llefsettings set send_to_local_port True
+command source /path/to/llef/.lldbinit
 ```
 Note that if not running via xcode you can probably skip the color-related lines
+
+You can also send this from UTM to the host
+for example, if your guest is at 192.168.64.3
+it probably means your host has some virtual network, and the host is assigned to 192.168.64.1
+So configure 192.168.64.1 and 8888 on both sender and receiver
 
 
 <p align="center">

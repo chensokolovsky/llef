@@ -1,7 +1,7 @@
 # ansi_sender.py
 import socket, atexit
 
-_addr = ("127.0.0.1", 9999)
+_addr = ("192.168.64.1", 8888)
 _timeout = None
 _encoding = "utf-8"
 _sock = None
@@ -13,10 +13,8 @@ def init_if_needed():
     if not _was_initted:
         init()
 
-def init(host="127.0.0.1", port=9999, timeout=None, encoding="utf-8"):
+def init():
     """Configure and open a persistent connection (no threading)."""
-    global _addr, _timeout, _encoding, _was_initted
-    _addr = (host, port); _timeout = timeout; _encoding = encoding
     _open()
     _was_initted = True
 
