@@ -1,7 +1,8 @@
 # ansi_sender.py
 import socket, atexit
 
-_addr = ("192.168.64.1", 8888)
+#_addr = ("192.168.64.1", 8888)
+_addr = ("localhost", 8888)
 _timeout = None
 _encoding = "utf-8"
 _sock = None

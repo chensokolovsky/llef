@@ -511,8 +511,12 @@ class ContextHandler:
         if update_registers:
             self.update_registers()
 
+
+        ## should we send to port
+        to_port = self.settings.send_to_local_port
+
         # Hack to print cursor at the top of the screen
-        clear_page()
+        clear_page(to_port)
 
         if self.settings.show_legend:
             self.print_legend()
@@ -532,7 +536,6 @@ class ContextHandler:
         if self.settings.show_trace:
             self.display_trace()
 
-        ## should we send to port
-        to_port = self.settings.send_to_local_port
+
 
         print_line(color=TERM_COLORS[self.color_settings.line_color], should_send=to_port)

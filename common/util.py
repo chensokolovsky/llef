@@ -38,16 +38,18 @@ def output_line(line: Any, should_send=False) -> None:
         print(line)
 
 
-def clear_page() -> None:
+def clear_page(send=False) -> None:
     """
     Used to clear the previously printed breakpoint information before
     printing the next information.
     """
+
+
     num_lines = shutil.get_terminal_size().lines
     for _ in range(num_lines):
         print()
-    print("\033[0;0H")  # Ansi escape code: Set cursor to 0,0 position
-    print("\033[J")  # Ansi escape code: Clear contents from cursor to end of screen
+    output_line("\033[0;0H", send)  # Ansi escape code: Set cursor to 0,0 position
+    output_line("\033[J", send)  # Ansi escape code: Clear contents from cursor to end of screen
 
 
 def print_line_with_string(
